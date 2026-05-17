@@ -1,0 +1,13 @@
+SELECT
+count(
+CASE
+WHEN device_type = 'laptop' then 1
+ELSE NULL
+END) as laptop_reviews,
+count(
+CASE
+WHEN device_type = 'phone' THEN 1
+WHEN device_type = 'tablet' THEN 1
+ELSE NULL
+END) as phone_reviews
+FROM viewership;
