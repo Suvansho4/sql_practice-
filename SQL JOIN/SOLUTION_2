@@ -1,1 +1,24 @@
+#this code going to give same output but it not reliable because if there is no null in status column then it going to give same result.
 
+SELECT city, count(status) AS completed_trades FROM trades
+JOIN users
+ON trades.user_id = users.user_id
+WHERE status = 'Completed'
+GROUP BY city
+ORDER BY completed_trades DESC
+LIMIT 3;
+
+
+#but good practice is to get precise date using (.) notation.
+-> correct code is this one
+
+SELECT 
+  users.city, 
+  COUNT(trades.order_id) AS total_orders 
+FROM trades 
+INNER JOIN users 
+  ON trades.user_id = users.user_id 
+WHERE trades.status = 'Completed' 
+GROUP BY users.city 
+ORDER BY total_orders DESC
+LIMIT 3;
