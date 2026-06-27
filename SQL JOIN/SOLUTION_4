@@ -1,0 +1,25 @@
+SELECT COALESCE(a.user_id , d.user_id) AS user_id,
+  CASE
+    WHEN d.paid IS NULL THEN 'CHURN'
+    WHEN d.paid IS NOT NULL AND a.status IN  ('NEW','EXISTING','RESURRECT') THEN 'EXISTING'
+    WHEN d.paid IS NOT NULL AND a.status = 'CHURN' THEN 'RESURRECT'
+    WHEN d.paid IS NOT NULL AND a.status IS NULL THEN 'NEW'
+    END AS new_status
+FROM advertiser a 
+LEFT JOIN daily_pay d 
+ON a.user_id = d.user_id
+
+UNION
+
+SELECT  COALESCE(a.user_id , d.user_id) AS user_id,
+   CASE 
+   WHEN d.paid IS NULL THEN 'CHURN'
+   WHEN d.paid is NOT NULL AND a.status IN ('NEW', 'EXISTING', 'RESURRECT') THEN 'EXISTING'
+   WHEN d.paid IS NOT NULL AND a.status = 'CHURN' THEN 'RESURRECT'
+   WHEN d.paid IS NOT NULL AND a.status IS NULL THEN 'NEW'
+   END AS new_status
+FROM daily_pay d 
+LEFT JOIN advertiser a 
+ON d.user_id = a.user_id
+WHERE  a.user_id IS NULL
+ORDER BY user_id;
